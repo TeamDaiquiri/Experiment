@@ -1,0 +1,15 @@
+canvas {
+    position: absolute;
+}
+
+#ship-canvas {
+    z-index: 10
+}
+
+#background-canvas {
+    z-index: 1;
+}
+
+.sprite-image {
+    display: none;
+}
