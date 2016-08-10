@@ -3,7 +3,7 @@ window.addEventListener('load', function() {
     'use strict';
 
     var WIDTH = 1200,
-        HEIGHT = 900;
+        HEIGHT = 700;
 
     var shipCanvas = document.getElementById('ship-canvas'),
         shipContext = shipCanvas.getContext('2d'),
@@ -21,8 +21,8 @@ window.addEventListener('load', function() {
     function gameLoop() {
         // clear previous frame
         shipContext.clearRect(
-          0,
-          0,
+          WIDTH/2 - shipImg.width/2,
+          HEIGHT - shipImg.height/framesCount - 10,
           shipImg.width,
           shipImg.height/framesCount
         );
@@ -34,8 +34,8 @@ window.addEventListener('load', function() {
           frameIndex*shipImg.height/framesCount,
           shipImg.width,
           shipImg.height/framesCount,
-          0,
-          0,
+          WIDTH/2 - shipImg.width/2,
+          HEIGHT - shipImg.height/framesCount - 10,
           shipImg.width,
           shipImg.height/framesCount
         );
@@ -47,8 +47,6 @@ window.addEventListener('load', function() {
           frameIndex = frameIndex % framesCount;
           loopTicksCount = 0;
         }
-
-
 
         window.requestAnimationFrame(gameLoop);
     }
