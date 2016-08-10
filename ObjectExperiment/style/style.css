@@ -1,0 +1,12 @@
+#game-canvas{
+	
+	border: 1px solid black;
+}
+#ship, #shoot, #enemy {
+	display: none;
+}
+canvas {
+    position: absolute;
+}
+
+
