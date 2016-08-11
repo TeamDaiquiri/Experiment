@@ -118,7 +118,7 @@ function createGame(gameSelector) {
         enemyBullets = [];
 
 
-    function GenerateEnemy(count) {
+    function GenerateEnemy(enemyes, count) {
         var offset = 1.5,
             boundOfRow = Math.floor((enemyCanvas.height / 2) / (offset * shipImg.height)),
             boundCol = Math.floor(enemyCanvas.width / (offset * shipImg.width)),
@@ -129,9 +129,8 @@ function createGame(gameSelector) {
                 if (getRandomNumber(0, 2)) {
                     enemyes.push(createEnemy(col * (offset * shipImg.width), row * (offset * shipImg.height)));
                     if ((generated += 1) > count) {
-                        break;
+                        return;
                     }
-
                 }
             }
         }
@@ -159,7 +158,7 @@ function createGame(gameSelector) {
             return 1;
         }
     }
-    function  CheckFriendlyCollision(neighbour) {
+    function  CheckFriendlyCollision(enemyes, neighbour) {
         var areColliding = false;
         enemyes.forEach(function (item, index) {
             if (neighbour !== item) {
@@ -171,7 +170,7 @@ function createGame(gameSelector) {
         return areColliding;
     }
 
-    function BulletInteraction() {
+    function BulletInteraction(bullets, enemyes) {
          bullets.forEach(function(item, index) {
             var lastBullet = item.body.move(dirDeltas[1]),
                 offsetX = 15,
@@ -217,7 +216,7 @@ function createGame(gameSelector) {
         });
     }
 
-    function EnemyBulletInteraction () {
+    function EnemyBulletInteraction (enemyBullets) {
         enemyBullets.forEach(function(item, index) {
             var lastBullet = item.body.move(dirDeltas[3]);
 
@@ -241,11 +240,11 @@ function createGame(gameSelector) {
                 }
         });
     }
-     function EnemyInteraction() {
+     function EnemyInteraction(enemyes) {
         enemyes.forEach(function(item, index) {
             var offset = 5;
             var prevEnemyPosition = item.body.move(dirDeltas[randomGeneratedNumber]);
-            if (CheckBounds(item.body.x, item.body.y, bulletCanvas, item.body.width, item.body.height) || CheckFriendlyCollision(item)) {
+            if (CheckBounds(item.body.x, item.body.y, bulletCanvas, item.body.width, item.body.height) || CheckFriendlyCollision(enemyes, item)) {
                 prevEnemyPosition = item.body.move(dirDeltas[getOpositeMovement(randomGeneratedNumber)]);
             }
             item.sprite.update();
@@ -258,7 +257,8 @@ function createGame(gameSelector) {
             }
         });
     }
-     function ChangeEnemyDirection(steps) {
+
+     function ChangeEnemyDirection(loopIterations, steps) {
         loopIterations += 1;
         if (loopIterations === steps) {
             loopIterations = 0;
@@ -274,17 +274,17 @@ function createGame(gameSelector) {
             y: myBody.y
         }, lastLocation);
 
-        BulletInteraction();
+        BulletInteraction(bullets, enemyes);
        
         ChangeEnemyDirection(15);
 
-        EnemyBulletInteraction();
+        EnemyBulletInteraction(enemyBullets);
         
-        EnemyInteraction();
+        EnemyInteraction(enemyes);
 
         if (enemyes.length === 0) {
             enemyCount += 1;
-            GenerateEnemy(enemyCount);
+            GenerateEnemy(enemyes, enemyCount);
         }
 
         window.requestAnimationFrame(gameLoop);
