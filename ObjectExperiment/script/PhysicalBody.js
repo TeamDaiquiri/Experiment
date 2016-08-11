@@ -16,13 +16,12 @@
     function isBetween(value, min, max) {
         return min <= value && value <= max;
     }
-     function colidesWith(otherPhysicalBody) {
+     function colidesWith(otherPhysicalBody, offset = 0) {
           var self = this;
-          
-        return (isBetween(otherPhysicalBody.x, self.x, self.x + self.width) ||
-                isBetween(otherPhysicalBody.x + otherPhysicalBody.width, self.x, self.x + self.width)) &&
-            (isBetween(otherPhysicalBody.y, self.y, self.y + self.height) ||
-                isBetween(otherPhysicalBody.y + otherPhysicalBody.height, self.y, self.y + self.height));
+        return (isBetween(otherPhysicalBody.x + offset, self.x, self.x + self.width) ||
+                isBetween(otherPhysicalBody.x + otherPhysicalBody.width + offset, self.x, self.x + self.width)) &&
+            (isBetween(otherPhysicalBody.y + offset, self.y, self.y + self.height) ||
+                isBetween(otherPhysicalBody.y  + offset+ otherPhysicalBody.height, self.y, self.y + self.height));
 }
 
      var physicalBody = {
