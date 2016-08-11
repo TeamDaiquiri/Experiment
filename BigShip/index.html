@@ -1,24 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <title>Spaceship game</title>
+      <link rel="stylesheet" href="./css/main.css">
+  </head>
+  <body>
+      <canvas id="ship-canvas"></canvas>
+      <canvas id="enemy-canvas"></canvas>
+      <canvas id="background-canvas"></canvas>
 
-<head>
-    <meta charset="UTF-8">
-    <title>Spaceship game</title>
-    <link rel="stylesheet" href="css/main.css">
-</head>
+      <img class="sprite-image" src="./imgs/enemy.png" id="enemy" />
+      <img class="sprite-image" src="./imgs/ship.png" id="ship" />
+      <img class="sprite-image" src="./imgs/bullet.png" id="bullet" />
 
-<body>
-    <canvas id="ship-canvas"></canvas>
-    <canvas id="alien-canvas"></canvas>
-    <canvas id="background-canvas"></canvas>
+      <script src="./js/main.js"></script>
+      <script src="./js/game-object.js"></script>
 
-    <img class="sprite-image" src="./imgs/alien.png" id="alien" />
-    <img class="sprite-image" src="./imgs/ship.png" id="ship" />
-    <img class="sprite-image" src="./imgs/bullet.png" id="bullet" />
-
-    <script src="./js/main.js"></script>
-    <script src="./js/game-object.js"></script>
-
-</body>
-
+  </body>
 </html>
