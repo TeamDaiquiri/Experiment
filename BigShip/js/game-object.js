@@ -27,16 +27,20 @@ function createGameObject(options) {
     return self;
   }
 
-  function update() {
+  function update(isVerticalSprite) {
     var self = this;
 
     // update frame
     self.loopTicksCount += 1;
     if (self.loopTicksCount > self.loopTicksPerFrame) {
-      self.colIndex += 1;
-      self.colIndex = self.colIndex % self.colsCount;
-      self.rowIndex += 1;
-      self.rowIndex = self.rowIndex % self.rowsCount;
+      if (!isVerticalSprite) {
+        self.colIndex += 1;
+        self.colIndex = self.colIndex % self.colsCount;
+      } else {
+        self.rowIndex += 1;
+        self.rowIndex = self.rowIndex % self.rowsCount;
+      }
+
       self.loopTicksCount = 0;
     }
 
