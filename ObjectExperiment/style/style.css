@@ -2,7 +2,7 @@
 	
 	border: 1px solid black;
 }
-#ship, #shoot, #enemy {
+#ship, #bullet, #enemy {
 	display: none;
 }
 canvas {

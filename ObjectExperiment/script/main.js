@@ -1,23 +1,5 @@
-function createGame(gameSelector) {
-    var gameCanvas = document.getElementById(gameSelector),
-        bulletCanvas = document.getElementById('bullet-canvas'),
-        ctxBul = bulletCanvas.getContext('2d'),
-        enemyCanvas = document.getElementById('enemy-canvas'),
-        ctxEnemy = enemyCanvas.getContext('2d'),
-        enemyCount = 2,
-        randomGeneratedNumber = 0,
-        loopIterations = 0,
-        ctxGame = gameCanvas.getContext('2d');
-    gameCanvas.width = 1000;
-    gameCanvas.height = 500;
-    bulletCanvas.width = 1000;
-    bulletCanvas.height = 500;
-    enemyCanvas.width = 1000;
-    enemyCanvas.height = 500;
 
-
-
-    const dirDeltas = [{
+const dirDeltas = [{
         "x": -3,
         "y": 0
     }, {
@@ -31,27 +13,46 @@ function createGame(gameSelector) {
         "y": +3
     }];
 
-    function createShoot(xCord, yCord) {
-        var shootSprite = createSprite({
-            spritesheet: shootImg,
+
+function createGame(gameSelector) {
+    var gameCanvas = document.getElementById(gameSelector),
+        bulletCanvas = document.getElementById('bullet-canvas'),
+        ctxBul = bulletCanvas.getContext('2d'),
+        enemyCanvas = document.getElementById('enemy-canvas'),
+        ctxEnemy = enemyCanvas.getContext('2d'),
+        enemyCount = 2,
+        randomGeneratedNumber = 0,
+        loopIterations = 0,
+        ctxGame = gameCanvas.getContext('2d');
+
+    gameCanvas.width = 1000;
+    gameCanvas.height = 500;
+    bulletCanvas.width = 1000;
+    bulletCanvas.height = 500;
+    enemyCanvas.width = 1000;
+    enemyCanvas.height = 500;
+
+    function createBullet(xCord, yCord) {
+        var bulletSprite = createSprite({
+            spritesheet: bulletImg,
             context: ctxBul,
-            width: shootImg.width / 2,
-            height: shootImg.height / 3,
+            width: bulletImg.width / 2,
+            height: bulletImg.height / 3,
             numberOfFrames: 3,
             loopTicksPerFrame: 5
         });
 
-        var shootBody = createPhysicalBody({
+        var bulletBody = createPhysicalBody({
             x: xCord,
             y: yCord,
             speed: 2,
-            width: shootImg.width / 2,
-            height: shootImg.height / 3
+            width: bulletImg.width / 2,
+            height: bulletImg.height / 3
         });
 
         return {
-            sprite: shootSprite,
-            body: shootBody
+            sprite: bulletSprite,
+            body: bulletBody
         };
     }
 
@@ -60,7 +61,7 @@ function createGame(gameSelector) {
     }
 
     function createEnemy(xCord, yCord) {
-        var shootSprite = createSprite({
+        var bulletSprite = createSprite({
             spritesheet: shipImg,
             context: ctxEnemy,
             width: shipImg.width,
@@ -78,12 +79,12 @@ function createGame(gameSelector) {
         });
 
         return {
-            sprite: shootSprite,
+            sprite: bulletSprite,
             body: enemyBody
         };
     }
     var shipImg = document.getElementById('ship'),
-        shootImg = document.getElementById('shoot'),
+        bulletImg = document.getElementById('bullet'),
         enemyImg = document.getElementById('enemy');
 
     var spriteBody = createSprite({
@@ -169,17 +170,9 @@ function createGame(gameSelector) {
         });
         return areColliding;
     }
-    function gameLoop() {
-        ctxGame.clearRect(0, 0, ctxGame.width, ctxGame.height);
 
-        // var lastLocation = myBody.move(dirDeltas[1]);
-        spriteBody.render({
-            x: myBody.x,
-            y: myBody.y
-        }, lastLocation);
-
-
-        bullets.forEach(function(item, index) {
+    function BulletInteraction() {
+         bullets.forEach(function(item, index) {
             var lastBullet = item.body.move(dirDeltas[1]),
                 offsetX = 15,
                 offsetY = 15,
@@ -222,27 +215,9 @@ function createGame(gameSelector) {
                 );
             }
         });
+    }
 
-        loopIterations += 1;
-        if (loopIterations === 15) {
-            loopIterations = 0;
-            randomGeneratedNumber = getRandomNumber(0, 4);
-        }
-        enemyes.forEach(function(item, index) {
-            var offset = 5;
-            var prevEnemyPosition = item.body.move(dirDeltas[randomGeneratedNumber]);
-            if (CheckBounds(item.body.x, item.body.y, bulletCanvas, item.body.width, item.body.height) || CheckFriendlyCollision(item)) {
-                prevEnemyPosition = item.body.move(dirDeltas[getOpositeMovement(randomGeneratedNumber)]);
-            }
-            item.sprite.update();
-            item.sprite.render({
-                x: item.body.x,
-                y: item.body.y
-            }, prevEnemyPosition);
-            if (getRandomNumber(0, 20) === 0) {
-                enemyBullets.push(createShoot(item.body.x + offset, item.body.y + offset));
-            }
-        });
+    function EnemyBulletInteraction () {
         enemyBullets.forEach(function(item, index) {
             var lastBullet = item.body.move(dirDeltas[3]);
 
@@ -265,29 +240,65 @@ function createGame(gameSelector) {
 
                 }
         });
+    }
+     function EnemyInteraction() {
+        enemyes.forEach(function(item, index) {
+            var offset = 5;
+            var prevEnemyPosition = item.body.move(dirDeltas[randomGeneratedNumber]);
+            if (CheckBounds(item.body.x, item.body.y, bulletCanvas, item.body.width, item.body.height) || CheckFriendlyCollision(item)) {
+                prevEnemyPosition = item.body.move(dirDeltas[getOpositeMovement(randomGeneratedNumber)]);
+            }
+            item.sprite.update();
+            item.sprite.render({
+                x: item.body.x,
+                y: item.body.y
+            }, prevEnemyPosition);
+            if (getRandomNumber(0, 40) === 0) {
+                enemyBullets.push(createBullet(item.body.x + offset, item.body.y + offset));
+            }
+        });
+    }
+     function ChangeEnemyDirection(steps) {
+        loopIterations += 1;
+        if (loopIterations === steps) {
+            loopIterations = 0;
+            randomGeneratedNumber = getRandomNumber(0, 4);
+        }
+    }
+    function gameLoop() {
+        ctxGame.clearRect(0, 0, ctxGame.width, ctxGame.height);
+
+        // var lastLocation = myBody.move(dirDeltas[1]);
+        spriteBody.render({
+            x: myBody.x,
+            y: myBody.y
+        }, lastLocation);
+
+        BulletInteraction();
+       
+        ChangeEnemyDirection(15);
+
+        EnemyBulletInteraction();
+        
+        EnemyInteraction();
 
         if (enemyes.length === 0) {
             enemyCount += 1;
             GenerateEnemy(enemyCount);
-
         }
 
         window.requestAnimationFrame(gameLoop);
     }
 
-
-    //Events
     document.body.addEventListener('keydown', function(ev) {
         var offset = 5;
         if ((37 <= ev.keyCode) && (ev.keyCode <= 40)) {
             lastLocation = myBody.move(dirDeltas[ev.keyCode - 37]);
             spriteBody.update();
         } else if (ev.keyCode === 32) {
-            var shoot = createShoot(myBody.x + offset, myBody.y + offset);
-            bullets.push(shoot);
-
+            var bullet = createBullet(myBody.x + offset, myBody.y + offset);
+            bullets.push(bullet);
         }
-
     });
     document.body.addEventListener('keyup', function(ev) {
         spriteBody.restart();
