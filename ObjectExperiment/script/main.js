@@ -240,7 +240,7 @@ function createGame(gameSelector) {
                 }
         });
     }
-     function EnemyInteraction(enemyes) {
+     function EnemyInteraction(randomGeneratedNumber, enemyes) {
         enemyes.forEach(function(item, index) {
             var offset = 5;
             var prevEnemyPosition = item.body.move(dirDeltas[randomGeneratedNumber]);
@@ -258,11 +258,12 @@ function createGame(gameSelector) {
         });
     }
 
-     function ChangeEnemyDirection(loopIterations, steps) {
+     function ChangeEnemyDirection(steps) {
         loopIterations += 1;
         if (loopIterations === steps) {
             loopIterations = 0;
             randomGeneratedNumber = getRandomNumber(0, 4);
+            console.log(randomGeneratedNumber);
         }
     }
     function gameLoop() {
@@ -278,9 +279,9 @@ function createGame(gameSelector) {
        
         ChangeEnemyDirection(15);
 
-        EnemyBulletInteraction(enemyBullets);
+        EnemyBulletInteraction( enemyBullets);
         
-        EnemyInteraction(enemyes);
+        EnemyInteraction(randomGeneratedNumber,enemyes);
 
         if (enemyes.length === 0) {
             enemyCount += 1;
